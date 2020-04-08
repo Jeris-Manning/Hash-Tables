@@ -23,7 +23,7 @@ class HashTable:
 
         You may replace the Python hash with DJB2 as a stretch goal.
         '''
-        return hash(key)
+        return hash(key) % (self.capacity)
 
 
     def _hash_djb2(self, key):
@@ -47,14 +47,27 @@ class HashTable:
         '''
         Store the value with the given key.
 
+
+
         # Part 1: Hash collisions should be handled with an error warning. (Think about and
         # investigate the impact this will have on the tests)
+        '''
+        bucket = self._hash_mod(key)
+        if self.storage[bucket] == None:
+            self.storage[bucket] = (key, value)
+        else:
+            newPair = LinkedPair(key, value)
+            newPair.next = self.storage[bucket]
+            self.storage[bucket] = newPair
 
+
+
+        '''
         # Part 2: Change this so that hash collisions are handled with Linked List Chaining.
 
         Fill this in.
         '''
-        pass
+        # pass
 
 
 
@@ -66,7 +79,24 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        # pass
+        key_hash = self._hash_mod(key)
+        if self.storage[key_hash] == None:
+            print(Warning("NICE TRY BUCKAROO"))
+
+        honk = self.storage[key_hash]
+        if type(honk) == LinkedPair:
+            while type(honk) == LinkedPair:
+                if honk.key == key:
+                    del(honk)
+                else:
+                    honk = honk.next
+        if type(honk) == tuple:
+            if honk[0] == key:
+                del(honk)
+        print(Warning("BAD KEY"))
+
+
 
 
     def retrieve(self, key):
@@ -77,7 +107,22 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        # pass
+        key_hash = self._hash_mod(key)
+
+        goose = self.storage[key_hash]
+        if type(goose) == LinkedPair:
+            while type(goose) == LinkedPair:
+                if goose.key == key:
+                    return goose.value
+                else:
+                    goose = goose.next
+        if type(goose) == tuple:
+            return goose[1]
+        return None
+
+
+
 
 
     def resize(self):
@@ -87,7 +132,7 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+
 
 
 
@@ -98,23 +143,23 @@ if __name__ == "__main__":
     ht.insert("line_2", "Filled beyond capacity")
     ht.insert("line_3", "Linked list saves the day!")
 
-    print("")
+    print(ht.storage)
 
     # Test storing beyond capacity
     print(ht.retrieve("line_1"))
     print(ht.retrieve("line_2"))
     print(ht.retrieve("line_3"))
 
-    # Test resizing
-    old_capacity = len(ht.storage)
-    ht.resize()
-    new_capacity = len(ht.storage)
+#     # Test resizing
+#     old_capacity = len(ht.storage)
+#     ht.resize()
+#     new_capacity = len(ht.storage)
 
-    print(f"\nResized from {old_capacity} to {new_capacity}.\n")
+#     print(f"\nResized from {old_capacity} to {new_capacity}.\n")
 
-    # Test if data intact after resizing
-    print(ht.retrieve("line_1"))
-    print(ht.retrieve("line_2"))
-    print(ht.retrieve("line_3"))
+#     # Test if data intact after resizing
+#     print(ht.retrieve("line_1"))
+#     print(ht.retrieve("line_2"))
+#     print(ht.retrieve("line_3"))
 
-    print("")
+#     print("")
