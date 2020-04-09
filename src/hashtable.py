@@ -53,10 +53,10 @@ class HashTable:
         # investigate the impact this will have on the tests)
         '''
         bucket = self._hash_mod(key)
+        newPair = LinkedPair(key, value)
         if self.storage[bucket] == None:
-            self.storage[bucket] = (key, value)
+            self.storage[bucket] = newPair
         else:
-            newPair = LinkedPair(key, value)
             newPair.next = self.storage[bucket]
             self.storage[bucket] = newPair
 
@@ -84,17 +84,37 @@ class HashTable:
         if self.storage[key_hash] == None:
             print(Warning("NICE TRY BUCKAROO"))
 
-        honk = self.storage[key_hash]
-        if type(honk) == LinkedPair:
-            while type(honk) == LinkedPair:
-                if honk.key == key:
-                    del(honk)
-                else:
-                    honk = honk.next
-        if type(honk) == tuple:
-            if honk[0] == key:
-                del(honk)
-        print(Warning("BAD KEY"))
+        # honk = self.storage[key_hash]
+        # if type(honk) == LinkedPair:
+        #     while type(honk) == LinkedPair:
+        #         if honk.key == key:
+        #             del(honk)
+        #         else:
+        #             honk = honk.next
+        # if type(honk) == tuple:
+        #     if honk[0] == key:
+        #         del(honk)
+        # print(Warning("BAD KEY"))
+        hashed_key = self.storage[key_hash]
+        # print(hashed_key.key, "HASHED KEY IN DELET FUNK")
+        keyholder = None
+        while hashed_key.next != None:
+            if hashed_key.key == key:
+
+                if keyholder != None:
+                    keyholder.next = hashed_key.next
+                hashed_key.value = None
+
+                return
+            else:
+                keyholder = hashed_key
+                hashed_key = hashed_key.next
+        if hashed_key.key == key:
+
+            hashed_key.value = None
+
+            return
+        print(Warning("bad key"))
 
 
 
@@ -110,15 +130,14 @@ class HashTable:
         # pass
         key_hash = self._hash_mod(key)
 
-        goose = self.storage[key_hash]
-        if type(goose) == LinkedPair:
-            while type(goose) == LinkedPair:
-                if goose.key == key:
-                    return goose.value
-                else:
-                    goose = goose.next
-        if type(goose) == tuple:
-            return goose[1]
+        hash_key = self.storage[key_hash]
+        while hash_key.next != None:
+            if hash_key.key == key:
+                return hash_key.value
+            else:
+                hash_key = hash_key.next
+        if hash_key.key == key:
+                return hash_key.value
         return None
 
 
@@ -132,34 +151,46 @@ class HashTable:
 
         Fill this in.
         '''
+        self.storage = self.storage + [None] * self.capacity
+        self.capacity = self.capacity * 2
+
+        # print(self.storage)
 
 
 
 
-if __name__ == "__main__":
-    ht = HashTable(2)
+# if __name__ == "__main__":
+#     ht = HashTable(2)
 
-    ht.insert("line_1", "Tiny hash table")
-    ht.insert("line_2", "Filled beyond capacity")
-    ht.insert("line_3", "Linked list saves the day!")
+    # ht.insert("line_1", "Tiny hash table")
+    # ht.insert("line_2", "Filled beyond capacity")
+    # ht.insert("line_3", "Linked list saves the day!")
 
-    print(ht.storage)
+    # print(ht.storage, "checkpoint")
 
-    # Test storing beyond capacity
-    print(ht.retrieve("line_1"))
-    print(ht.retrieve("line_2"))
-    print(ht.retrieve("line_3"))
+    # # Test storing beyond capacity
+    # print(ht.retrieve("line_1"))
+    # print(ht.retrieve("line_2"))
+    # print(ht.retrieve("line_3"))
 
-#     # Test resizing
-#     old_capacity = len(ht.storage)
-#     ht.resize()
-#     new_capacity = len(ht.storage)
+    # print(ht.storage[0].key, ht.storage[0].value, ht.storage[0].next)
+    # print(ht.storage[0].next)
+    # # Test resizing
+    # old_capacity = len(ht.storage)
+    # ht.resize()
+    # new_capacity = len(ht.storage)
 
-#     print(f"\nResized from {old_capacity} to {new_capacity}.\n")
+    # print(ht.storage, "NOW EVEN BIGGER")
 
-#     # Test if data intact after resizing
-#     print(ht.retrieve("line_1"))
-#     print(ht.retrieve("line_2"))
-#     print(ht.retrieve("line_3"))
+    # print(f"\nResized from {old_capacity} to {new_capacity}.\n")
 
-#     print("")
+    # print(ht.storage[0].key, ht.storage[0].value, ht.storage[0].next)
+    # print(ht.storage[1].key, ht.storage[1].value, ht.storage[1].next)
+
+
+    # Test if data intact after resizing
+    # print(ht.retrieve("line_1"))
+    # print(ht.retrieve("line_2"))
+    # print(ht.retrieve("line_3"))
+
+    # print("")
