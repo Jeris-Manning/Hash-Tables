@@ -37,6 +37,7 @@ class TestHashTable(unittest.TestCase):
         self.assertTrue(return_value == "val-7")
         return_value = ht.retrieve("key-8")
         self.assertTrue(return_value == "val-8")
+        print("we okay til here?")
         return_value = ht.retrieve("key-9")
         self.assertTrue(return_value == "val-9")
 
@@ -133,6 +134,7 @@ class TestHashTable(unittest.TestCase):
         ht.remove("key-0")
 
         return_value = ht.retrieve("key-0")
+        print(return_value, "RETURN VALUE")
         self.assertTrue(return_value is None)
         return_value = ht.retrieve("key-1")
         self.assertTrue(return_value is None)
